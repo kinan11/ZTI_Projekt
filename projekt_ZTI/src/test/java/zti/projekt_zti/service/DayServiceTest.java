@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Ta klasa zawiera testy jednostkowe dla klasy {@link DayService} w pakiecie {@code zti.projekt_zti.service}.
+ * Ta klasa zawiera testy jednostkowe dla klasy DayService w pakiecie {@code zti.projekt_zti.service}.
  * Testy te weryfikują poprawność działania serwisu w obsłudze operacji dotyczących dni.
  */
 public class DayServiceTest {
@@ -68,8 +68,8 @@ public class DayServiceTest {
 
     /**
      * Przypadek testowy pobierania istniejącego dnia.
-     * Oczekuje się zwrócenia obiektu typu {@link GetDayResponseDto} zawierającego odpowiednie dane.
-     * Mock {@link dayRepository.findByDateAndUserId()} zwraca istniejący dzień.
+     * Oczekuje się zwrócenia obiektu typu GetDayResponseDto zawierającego odpowiednie dane.
+     * Mock dayRepository.findByDateAndUserId() zwraca istniejący dzień.
      * Test sprawdza, czy zwrócone dane są zgodne z oczekiwaniami.
      */
     @Test
@@ -119,8 +119,8 @@ public class DayServiceTest {
 
     /**
      * Przypadek testowy pobierania nieistniejącego dnia.
-     * Oczekuje się zwrócenia pustego obiektu typu {@link GetDayResponseDto}.
-     * Mock {@link dayRepository.findByDateAndUserId()} zwraca wartość null.
+     * Oczekuje się zwrócenia pustego obiektu typu GetDayResponseDto.
+     * Mock dayRepository.findByDateAndUserId() zwraca wartość null.
      * Test sprawdza, czy zwrócone dane są zgodne z oczekiwaniami.
      */
     @Test
@@ -148,7 +148,7 @@ public class DayServiceTest {
 
     /**
      * Przypadek testowy aktualizacji istniejącego dnia.
-     * Test sprawdza, czy metoda {@link dayService.updateDay()} aktualizuje istniejący dzień zgodnie z przekazanymi danymi.
+     * Test sprawdza, czy metoda dayService.updateDay() aktualizuje istniejący dzień zgodnie z przekazanymi danymi.
      */
     @Test
     public void testUpdateDay_ExistingDay() {
@@ -175,8 +175,8 @@ public class DayServiceTest {
 
     /**
      * Przypadek testowy pobierania wszystkich dni użytkownika, gdy istnieją dni.
-     * Oczekuje się zwrócenia obiektu typu {@link DaysDto} zawierającego dane o dniach.
-     * Mock {@link dayRepository.findAllByUserId()} zwraca listę dni.
+     * Oczekuje się zwrócenia obiektu typu DaysDto zawierającego dane o dniach.
+     * Mock dayRepository.findAllByUserId() zwraca listę dni.
      * Test sprawdza, czy zwrócone dane są zgodne z oczekiwaniami.
      */
     @Test
@@ -215,8 +215,8 @@ public class DayServiceTest {
 
     /**
      * Przypadek testowy pobierania wszystkich dni użytkownika, gdy nie ma żadnych dni.
-     * Oczekuje się zwrócenia pustego obiektu typu {@link DaysDto}.
-     * Mock {@link dayRepository.findAllByUserId()} zwraca wartość null.
+     * Oczekuje się zwrócenia pustego obiektu typu DaysDto.
+     * Mock dayRepository.findAllByUserId() zwraca wartość null.
      * Test sprawdza, czy zwrócone dane są zgodne z oczekiwaniami.
      */
     @Test

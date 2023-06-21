@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Ta klasa zawiera testy jednostkowe dla klasy {@link StatisticsController} w pakiecie {@code zti.projekt_zti.controller}.
+ * Ta klasa zawiera testy jednostkowe dla klasy StatisticsController w pakiecie {@code zti.projekt_zti.controller}.
  * Testy te weryfikują poprawność działania kontrolera w obsłudze operacji dotyczących statystyk.
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -59,8 +59,8 @@ public class StatisticsControllerTest {
 
     /**
      * Przypadek testowy pobierania statystyk dotyczących samopoczucia z poprawnymi parametrami.
-     * Oczekuje się zwrócenia obiektu typu {@link WellBeeingStatisticsDto}.
-     * Mock {@link statisticsService.getWellBeeing()} zwraca ten obiekt.
+     * Oczekuje się zwrócenia obiektu typu  WellBeeingStatisticsDto.
+     * Mock statisticsService.getWellBeeing() zwraca ten obiekt.
      * Test sprawdza, czy odpowiedź ma status HTTP 200 OK i czy zawiera oczekiwane dane dotyczące statystyk.
      */
     @Test
@@ -95,8 +95,8 @@ public class StatisticsControllerTest {
 
     /**
      * Przypadek testowy pobierania statystyk dotyczących parametru samopoczucia z poprawnymi parametrami.
-     * Oczekuje się zwrócenia obiektu typu {@link WellBeeingParameterStatisticsDto}.
-     * Mock {@link statisticsService.getWellBeeingParameter()} zwraca ten obiekt.
+     * Oczekuje się zwrócenia obiektu typu WellBeeingParameterStatisticsDto.
+     * Mock statisticsService.getWellBeeingParameter() zwraca ten obiekt.
      * Test sprawdza, czy odpowiedź ma status HTTP 200 OK i czy zawiera oczekiwane dane dotyczące statystyk parametru samopoczucia.
      */
     @Test
@@ -128,8 +128,8 @@ public class StatisticsControllerTest {
 
     /**
      * Przypadek testowy pobierania ogólnych statystyk z poprawnymi parametrami.
-     * Oczekuje się zwrócenia obiektu typu {@link StatisticsDto}.
-     * Mock {@link statisticsService.getStatistics()} zwraca ten obiekt.
+     * Oczekuje się zwrócenia obiektu typu StatisticsDto
+     * Mock statisticsService.getStatistics() zwraca ten obiekt.
      * Test sprawdza, czy odpowiedź ma status HTTP 200 OK i czy zawiera oczekiwane dane dotyczące ogólnych statystyk.
      */
     @Test
