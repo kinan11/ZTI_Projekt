@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ParametersForm.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ParametersForm.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useContext } from "react";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import moment from "moment";
+import { TextField } from "@mui/material";
+import ChartWellBeeingParameter from "./ChartWellBeeingParameter";
+import ChartWellBeeing from "./ChartWellBeeing";
+import ChartParameter from "./ChartParameter";
+import axios from "axios";
+import ChartStats from "./ChartStats";
+import { UserContext } from "../App.js";
+import { ChartContext } from "./Statistics";
+
+/**
+ * Komponent React odpowiedzialny za formularz parametrów.
+ *
+ * @component
+ * @param {Object} props - Obiekt z parametrami.
+ * @param {string} props.chart - Typ wykresu do wyświetlenia.
+ * @returns {JSX.Element} Komponent ParametersForm.
+ */
+export const ParametersForm = (props) => {
+  const [wellBeing, setWellBeing] = useState("physical");
+  const [param, setParam] = useState("workH");
+  const [period, setPeriod] = useState("week");
+  const [periodFrom, setPeriodFrom] = useState(
+    moment().subtract(1, "week").format("YYYY-MM-DD")
+  );
+  const [periodTo, setPeriodTo] = useState(moment().format("YYYY-MM-DD"));
+  const [drug, setDrug] = useState("");
+  const [supplement, setSupplement] = useState("");
+  const [paramName, setParamName] = useState("");
+  const [wellName, setWellName] = useState("");
+  const [min, setMin] = useState(null);
+  const [maks, setMaks] = useState(null);
+  const [avg, setAvg] = useState(null);
+  const [drugsFields, setDrugsFields] = useState(false);
+  const [supplementsFields, setSupplementsFields] = useState(false);
+  const [showChart, setShowChart] = useContext(ChartContext);
+  const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
+  const [chart, setChart] = useState("WellBeeingParameter");
+  const colors = ["#8884d8", "#82ca9d", "#ffc658"];
+  const [user, setUser] = useContext(UserContext);
+  const [color, setColor] = useState(true);
+
+  /**
+   * Obsługuje zmianę wartości samopoczucia.
+   * @component
+   * @param {string} value - Nowa wartość samopoczucia.
+   * @returns {void}
+   */
+  const handleWellBeingChange = (event) => {
+    setWellBeing(event.target.value);
+    setColor(false);
+  };
+
+  /**
+   * Obsługuje zmianę wartości parametru.
+   *
+   * @param {string} value - Nowa wartość parametru.
+   * @returns {void}
+   */
+  const handleParamChange = (event) => {
+    setParam(event.target.value);
+    setSupplementsFields(false);
+    setDrugsFields(false);
+    if (event.target.value === "drugs") {
+      setDrugsFields(true);
+    }
+    if (event.target.value === "supplements") {
+      setSupplementsFields(true);
+    }
+    setColor(false);
+  };
+
+  /**
+   * Obsługuje zmianę wartości okresu.
+   *
+   * @param {string} value - Nowa wartość okresu.
+   * @returns {void}
+   */
+  const handlePeriodChange = (event) => {
+    setPeriod(event.target.value);
+    setPeriodTo(event.target.value);
+    setColor(false);
+  };
+
+  /**
+   * Obsługuje zmianę wartości wybranego leku.
+   *
+   * @param {string} value - Nowa wartość wybranego leku.
+   * @returns {void}
+   */
+  const handleDrugChange = (value) => {
+    setDrug(value.target.value);
+    setColor(false);
+  };
+
+  /**
+   * Obsługuje zmianę wartości wybranego suplementu.
+   *
+   * @param {string} value - Nowa wartość wybranego suplementu.
+   * @returns {void}
+   */
+  const handleSupplementChange = (value) => {
+    setSupplement(value.target.value);
+    setColor(false);
+  };
+
+  /**
+   * Obsługuje złożenie formularza.
+   *
+   * @returns {void}
+   */
+  const handleSubmit = async () => {
+    const config = {
+      headers: { Authorization: "Bearer " + user.token },
+    };
+
+    switch (props.chart) {
+      case "wellBeeingParameter":
+        const bodyParameters1 = {
+          period: period,
+          userId: user.id,
+          wellBeeing: wellBeing,
+          parameter: param,
+          name:
+            param === "drugs" || param === "supplements"
+              ? param === "drugs"
+                ? drug
+                : supplement
+              : null,
+        };
+
+        console.log(drug);
+        const searchParams1 = new URLSearchParams(bodyParameters1);
+        const response1 = await axios.get(
+          "http://localhost:8088/wellBeeingParameter?" +
+            searchParams1.toString(),
+          config
+        );
+        setData(response1.data.statistics);
+        setParamName(response1.data.parameterName);
+        setWellName(response1.data.wellBeeingName);
+        console.log(response1.data.statistics);
+        break;
+
+      case "wellBeeing":
+        const bodyParameters = {
+          period: period,
+          userId: user.id,
+        };
+        const searchParams = new URLSearchParams(bodyParameters);
+        const response = await axios.get(
+          "http://localhost:8088/wellBeeing?" + searchParams.toString(),
+          config
+        );
+        setData(response.data.statistics);
+        console.log(response.data.statistics);
+        break;
+
+      case "parameter":
+        const bodyParameters3 = {
+          period: period,
+          userId: user.id,
+          parameter: param,
+          name:
+            param === "drugs" || param === "supplements"
+              ? param === "drugs"
+                ? drug
+                : supplement
+              : null,
+        };
+        const searchParams3 = new URLSearchParams(bodyParameters3);
+        const response3 = await axios.get(
+          "http://localhost:8088/parameter?" + searchParams3.toString(),
+          config
+        );
+        setData2(response3.data.statistics);
+        setParamName(response3.data.parameterName);
+        break;
+
+      case "statistics":
+        const bodyParameters4 = {
+          period: period,
+          userId: user.id,
+          parameter: param,
+          name:
+            param === "drugs" || param === "supplements"
+              ? param === "drugs"
+                ? drug
+                : supplement
+              : null,
+        };
+        const searchParams4 = new URLSearchParams(bodyParameters4);
+        const response4 = await axios.get(
+          "http://localhost:8088/statistics?" + searchParams4.toString(),
+          config
+        );
+        setData3(response4.data.statistics);
+        setParamName(response4.data.parameterName);
+        setMin(response4.data.min);
+        setMaks(response4.data.maks);
+        setAvg(response4.data.avg);
+        setColor(true);
+        break;
+
+      default:
+        break;
+    }
+
+    setShowChart(true);
+  };
+
+  return (
+    &lt;div>
+      &lt;div>
+        {props.chart === "wellBeeingParameter" &amp;&amp; (
+          &lt;Select
+            label="Samopoczucie"
+            value={wellBeing}
+            onChange={handleWellBeingChange}
+            inputProps={{
+              name: "well-being",
+              id: "well-being-select",
+            }}
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              border: "2px solid #7439db",
+              borderRadius: "10px",
+              marginRight: "5px",
+              color: "#7439db",
+              fontWeight: "bold",
+            }}
+          >
+            &lt;MenuItem value="physical">Samopoczucie fizyczne&lt;/MenuItem>
+            &lt;MenuItem value="mental">Samopoczucie psychiczne&lt;/MenuItem>
+          &lt;/Select>
+        )}
+        {props.chart === "wellBeeingParameter" &amp;&amp; (
+          &lt;Select
+            label="Parametr"
+            value={param}
+            onChange={handleParamChange}
+            inputProps={{
+              name: "param",
+              id: "param-select",
+            }}
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              border: "2px solid #7439db",
+              borderRadius: "10px",
+              marginRight: "5px",
+              color: "#7439db",
+              fontWeight: "bold",
+            }}
+          >
+            &lt;MenuItem value="workH">Przepracowane godziny&lt;/MenuItem>
+            &lt;MenuItem value="studyH">Godziny na uczelni&lt;/MenuItem>
+            &lt;MenuItem value="learnH">Godziny nauki&lt;/MenuItem>
+            &lt;MenuItem value="sleepH">Przespane godziny&lt;/MenuItem>
+            &lt;MenuItem value="sportH">Godziny spędzone na sporcie&lt;/MenuItem>
+            &lt;MenuItem value="restH">Godziny odpoczynku&lt;/MenuItem>
+            &lt;MenuItem value="mealCount">Liczba posiłków&lt;/MenuItem>
+            &lt;MenuItem value="waterCount">Ilość wypitej wody&lt;/MenuItem>
+            &lt;MenuItem value="drugs">Używki&lt;/MenuItem>
+            &lt;MenuItem value="supplements">Suplementy&lt;/MenuItem>
+            &lt;MenuItem value="meetingH">
+              Ilość czasu na spotkaniach towarzyskich
+            &lt;/MenuItem>
+            &lt;MenuItem value="peopleCount">Ilość spotkanych osób&lt;/MenuItem>
+          &lt;/Select>
+        )}
+        {(props.chart === "parameter" || props.chart === "statistics") &amp;&amp; (
+          &lt;Select
+            label="Parametr"
+            value={param}
+            onChange={handleParamChange}
+            inputProps={{
+              name: "param",
+              id: "param-select",
+            }}
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              border: "2px solid #7439db",
+              borderRadius: "10px",
+              marginRight: "5px",
+              color: "#7439db",
+              fontWeight: "bold",
+            }}
+          >
+            &lt;MenuItem value="workH">Samopoczucie fizyczne&lt;/MenuItem>
+            &lt;MenuItem value="studyH">Samopoczucie psychiczne&lt;/MenuItem>
+            &lt;MenuItem value="workH">Przepracowane godziny&lt;/MenuItem>
+            &lt;MenuItem value="studyH">Godziny na uczelni&lt;/MenuItem>
+            &lt;MenuItem value="learnH">Godziny nauki&lt;/MenuItem>
+            &lt;MenuItem value="sleepH">Przespane godziny&lt;/MenuItem>
+            &lt;MenuItem value="sportH">Godziny spędzone na sporcie&lt;/MenuItem>
+            &lt;MenuItem value="restH">Godziny odpoczynku&lt;/MenuItem>
+            &lt;MenuItem value="mealCount">Liczba posiłków&lt;/MenuItem>
+            &lt;MenuItem value="waterCount">Ilość wypitej wody&lt;/MenuItem>
+            &lt;MenuItem value="drugs">Używki&lt;/MenuItem>
+            &lt;MenuItem value="supplements">Suplementy&lt;/MenuItem>
+          &lt;/Select>
+        )}
+        {supplementsFields &amp;&amp;
+          (props.chart === "wellBeeingParameter" ||
+            props.chart === "parameter" ||
+            props.chart === "statistics") &amp;&amp; (
+            &lt;TextField
+              InputProps={{
+                style: { color: "#7439db", fontWeight: "bold" },
+              }}
+              type="text"
+              defaultValue={"Suplement"}
+              onChange={handleSupplementChange}
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                border: "2px solid #7439db",
+                borderRadius: "10px",
+                marginRight: "5px",
+                color: "#7439db",
+                fontWeight: "bold",
+                marginTop: "22px",
+              }}
+            />
+          )}
+        {drugsFields &amp;&amp;
+          (props.chart === "wellBeeingParameter" ||
+            props.chart === "parameter" ||
+            props.chart === "statistics") &amp;&amp; (
+            &lt;TextField
+              InputProps={{
+                style: { color: "#7439db", fontWeight: "bold" },
+              }}
+              type="text"
+              defaultValue={"Używka"}
+              onChange={handleDrugChange}
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                border: "2px solid #7439db",
+                borderRadius: "10px",
+                marginRight: "5px",
+                color: "#7439db",
+                fontWeight: "bold",
+                marginTop: "22px",
+              }}
+            />
+          )}
+
+        &lt;Select
+          label="Okres"
+          value={period}
+          onChange={handlePeriodChange}
+          inputProps={{
+            name: "period",
+            id: "period-select",
+          }}
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            border: "2px solid #7439db",
+            borderRadius: "10px",
+            marginRight: "5px",
+            color: "#7439db",
+            fontWeight: "bold",
+          }}
+        >
+          &lt;MenuItem value="week">Ostatni tydzień&lt;/MenuItem>
+          &lt;MenuItem value="month">Ostatni miesiąc&lt;/MenuItem>
+          &lt;MenuItem value="year">Ostatni rok&lt;/MenuItem>
+        &lt;/Select>
+        &lt;button
+          type="submit"
+          className="submitFormButton"
+          onClick={handleSubmit}
+          style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}
+        >
+          Pokaż
+        &lt;/button>
+      &lt;/div>
+
+      {showChart &amp;&amp; props.chart === "wellBeeingParameter" &amp;&amp; (
+        &lt;ChartWellBeeingParameter
+          data={data}
+          paramName={paramName}
+          wellName={wellName}
+        />
+      )}
+      {showChart &amp;&amp; props.chart === "wellBeeing" &amp;&amp; (
+        &lt;ChartWellBeeing data={data} period={period} />
+      )}
+      {showChart &amp;&amp; props.chart === "parameter" &amp;&amp; (
+        &lt;ChartParameter data={data2} name={paramName} />
+      )}
+      {showChart &amp;&amp; props.chart === "statistics" &amp;&amp; (
+        &lt;ChartStats
+          data={data3}
+          min={min}
+          maks={maks}
+          avg={avg}
+          name={paramName}
+          color={color}
+        />
+      )}
+    &lt;/div>
+  );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#ChartParameter">ChartParameter</a></li><li><a href="global.html#ChartStats">ChartStats</a></li><li><a href="global.html#ChartWellBeeing">ChartWellBeeing</a></li><li><a href="global.html#ChartWellBeeingParameter">ChartWellBeeingParameter</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#History">History</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ParametersForm">ParametersForm</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#Statistics">Statistics</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Jun 20 2023 19:32:44 GMT+0200 (czas środkowoeuropejski letni)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

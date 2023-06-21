@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app:
+    container_name: backend
+    build: ./projekt_ZTI
+    ports:
+      - 8088:8088
+    links:
+      - db
+  db:
+    container_name: db-1
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=postgres
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"

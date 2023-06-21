@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ChartWellBeeing.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ChartWellBeeing.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+
+import "./ChartHeatmap.css";
+
+/**
+ * Komponent reprezentujący wykres heatmapy dla samopoczucia.
+ *
+ * @component
+ * @param {Object[]} data - Tablica zawierająca dane do wygenerowania heatmapy.
+ * @param {number} data[].x - Współrzędna x punktu (samopoczucie fizyczne).
+ * @param {number} data[].y - Współrzędna y punktu (samopoczucie psychiczne).
+ * @returns {JSX.Element} - Zwraca element reprezentujący wykres heatmapy.
+ */
+const ChartWellBeeing = ({ data }) => {
+  const matrix = Array.from({ length: 10 }, () =>
+    Array.from({ length: 10 }, () => 0)
+  );
+
+  data.forEach((point) => {
+    const { x, y } = point;
+    matrix[y - 1][x - 1]++;
+  });
+
+  const minValue = Math.min(...matrix.flat());
+  const maxValue = Math.max(...matrix.flat());
+
+  /**
+   * Funkcja interpolująca jasność w zależności od wartości.
+   *
+   * @param {number} value - Wartość do interpolacji.
+   * @param {number} min - Minimalna wartość w macierzy.
+   * @param {number} max - Maksymalna wartość w macierzy.
+   * @returns {string} - Zwraca wartość koloru w formacie hsl.
+   */
+  const interpolateLightness = (value, min, max) => {
+    const normalizedValue = (value - min) / (max - min);
+    const lightness = 80 - normalizedValue * 60;
+    return `hsl(240, 100%, ${lightness}%)`;
+  };
+
+  return (
+    &lt;div className="cont">
+      &lt;div className="podpis">
+        &lt;div className="fizyczne">Samopoczucie psychiczne&lt;/div>
+        &lt;div className="axis">
+          {[...Array(10)].map((_, index) => (
+            &lt;div
+              key={index}
+              style={{
+                width: "100%",
+                marginLeft: "30px",
+                height: "43px",
+                display: "flex",
+                fontSize: "20px",
+                fontWeight: "bold",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {index + 1}
+            &lt;/div>
+          ))}
+        &lt;/div>
+      &lt;/div>
+
+      &lt;div className="grid">
+        &lt;div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(10, 1fr)",
+            gap: "4px",
+            marginTop: "30px",
+            marginRight: "0px",
+            marginLeft: "auto",
+            width: "100%",
+          }}
+          className="grid"
+        >
+          {matrix.map((row, rowIndex) =>
+            row.map((value, columnIndex) => (
+              &lt;div
+                key={`${rowIndex}-${columnIndex}`}
+                style={{
+                  width: "100%",
+                  height: "40px",
+                  backgroundColor: interpolateLightness(
+                    value,
+                    minValue,
+                    maxValue
+                  ),
+                  color: "#FFFFFF",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {value}
+              &lt;/div>
+            ))
+          )}
+        &lt;/div>
+        &lt;div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(10, 1fr)",
+            gap: "4px",
+            marginTop: "10px",
+            width: "100%",
+            marginRight: "0px",
+            marginLeft: "auto",
+          }}
+        >
+          {[...Array(10)].map((_, index) => (
+            &lt;div
+              key={index}
+              style={{
+                width: "100%",
+                height: "40px",
+                display: "flex",
+                fontSize: "20px",
+                fontWeight: "bold",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {index + 1}
+            &lt;/div>
+          ))}
+        &lt;/div>
+        &lt;div
+          style={{
+            marginTop: "10px",
+            textAlign: "center",
+            fontSize: "20px",
+            fontWeight: "bold",
+            width: "100%",
+            marginRight: "0px",
+            marginLeft: "auto",
+          }}
+        >
+          Samopoczucie fizyczne
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+export default ChartWellBeeing;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#ChartParameter">ChartParameter</a></li><li><a href="global.html#ChartStats">ChartStats</a></li><li><a href="global.html#ChartWellBeeing">ChartWellBeeing</a></li><li><a href="global.html#ChartWellBeeingParameter">ChartWellBeeingParameter</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#History">History</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ParametersForm">ParametersForm</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#Statistics">Statistics</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Jun 20 2023 19:32:44 GMT+0200 (czas środkowoeuropejski letni)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

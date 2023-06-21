@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ChartWellBeeingParameter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ChartWellBeeingParameter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  ZAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Label,
+} from "recharts";
+
+/**
+ * Komponent reprezentujący wykres scatter chart dla parametru i samopoczucia.
+ *
+ * @component
+ * @param {Object} props - Właściwości komponentu.
+ * @param {Object[]} props.data - Tablica zawierająca dane do wygenerowania wykresu scatter chart.
+ * @param {number} props.data[].x - Wartość parametru x (parametr).
+ * @param {number} props.data[].y - Wartość parametru y (samopoczucie).
+ * @param {string} props.paramName - Nazwa parametru.
+ * @param {string} props.wellName - Rodzaj samopoczucia.
+ * @returns {JSX.Element} - Zwraca element reprezentujący wykres scatter chart.
+ */
+const ChartWellBeeingParameter = (props) => {
+  const counts = {};
+  props.data.forEach((point) => {
+    const key = `${point.x}-${point.y}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  const markData = Object.keys(counts).map((key) => {
+    const [x, y] = key.split("-").map(Number);
+    const count = counts[key];
+    return { x, y, Krotność: count };
+  });
+
+  const sortedData = markData.sort((a, b) => a.x - b.x);
+
+  const maxCount = Math.max(...Object.values(counts));
+  const minSize = 20;
+  const maxSize = 100;
+
+  return (
+    &lt;div
+      style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}
+    >
+      {props.data.length !== 0 ? (
+        &lt;ScatterChart
+          width={700}
+          height={350}
+          style={{
+            backgroundColor: "white",
+            padding: "30px",
+            borderRadius: "20px",
+          }}
+        >
+          &lt;CartesianGrid strokeDasharray="3 3" />
+          &lt;XAxis
+            dataKey="x"
+            label={{
+              value: props.paramName,
+              position: "insideBottom",
+              dy: 18,
+              fontSize: 20,
+            }}
+          />
+          &lt;YAxis
+            dataKey="y"
+            label={{
+              value: props.wellName,
+              position: "insideLeft",
+              dx: 20,
+              dy: 100,
+              angle: -90,
+              fontSize: 20,
+            }}
+          />
+          &lt;ZAxis
+            dataKey="Krotność"
+            domain={[1, maxCount]}
+            range={[minSize, maxSize]}
+          />
+          &lt;Tooltip
+            cursor={{ strokeDasharray: "3 3" }}
+            formatter={(value, name) =>
+              name === "Krotność"
+                ? ["Krotność: " + value]
+                : name === "x"
+                ? [props.paramName + ": " + value]
+                : [props.wellName + ": " + value]
+            }
+          />
+          &lt;Legend />
+          &lt;Scatter
+            name={props.paramName}
+            data={sortedData} // Używanie posortowanych danych
+            fill="#8884d8"
+            shape="circle"
+            size={(entry) =>
+              (entry.Krotność * (maxSize - minSize)) / maxCount + minSize
+            }
+          >
+            &lt;Label
+              value="krotność"
+              position="center"
+              offset={10}
+              fill="#000"
+              fontSize={12}
+            />
+          &lt;/Scatter>
+        &lt;/ScatterChart>
+      ) : (
+        &lt;div
+          style={{ marginTop: "50px", fontSize: "30px", fontWeight: "bold" }}
+        >
+          Brak danych
+        &lt;/div>
+      )}
+    &lt;/div>
+  );
+};
+
+export default ChartWellBeeingParameter;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#ChartParameter">ChartParameter</a></li><li><a href="global.html#ChartStats">ChartStats</a></li><li><a href="global.html#ChartWellBeeing">ChartWellBeeing</a></li><li><a href="global.html#ChartWellBeeingParameter">ChartWellBeeingParameter</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#History">History</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ParametersForm">ParametersForm</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#Statistics">Statistics</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Jun 20 2023 19:32:44 GMT+0200 (czas środkowoeuropejski letni)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

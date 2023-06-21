@@ -1,0 +1,35 @@
+.cont {
+    /* display: block; */
+    /* width:800px; */
+
+  }
+  
+  .con:after {
+    content:'';
+    display:block;
+    clear:both;
+  }
+
+  .podpis {
+    float:left;
+    width:9%;
+    height:500px;
+  }
+
+  .grid {
+    float:right;
+    width:90%;
+  }
+
+  .fizyczne {
+    transform: rotate(-90deg);
+    width:300px;
+    margin-left:-110px;
+    margin-top:240px;
+    font-size: 20px;
+    font-weight: bold,
+  }
+
+  .axis {
+    margin-top: -230px;
+  }
